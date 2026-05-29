@@ -142,7 +142,6 @@
   background: var(--red);
   min-height: 100vh;
   position: relative;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -166,6 +165,7 @@
 .landing-wrapper .site-header {
   position: relative;
   z-index: 10;
+  overflow: visible;
 }
 
 .landing-wrapper .site-nav {
@@ -209,6 +209,9 @@
   letter-spacing: 0.05em;
   transition: opacity 0.2s;
   position: relative;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .landing-wrapper .nav-links a::after {
@@ -238,6 +241,121 @@
   opacity: 1 !important;
   padding: 0.5rem 1rem;
   clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+}
+
+/* ─── BURGER BUTTON ─────────────────────────────────────────────────── */
+.landing-wrapper .burger-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--ink);
+  font-size: 1.4rem;
+  line-height: 1;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.25rem;
+  transition: opacity 0.2s;
+}
+
+.landing-wrapper .burger-btn:hover {
+  opacity: 0.75;
+}
+
+.landing-wrapper .burger-btn:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* ─── MOBILE DROPDOWN MENU ──────────────────────────────────────────── */
+.landing-wrapper .mobile-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: var(--red);
+  border-top: 1px solid rgba(10, 10, 10, 0.2);
+  z-index: 200;
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.3s ease-out;
+}
+
+.landing-wrapper .mobile-menu.open {
+  max-height: 480px;
+}
+
+.landing-wrapper .mobile-menu ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 0 1rem;
+}
+
+.landing-wrapper .mobile-menu a {
+  font-family: "Chivo Mono", monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  padding: 0.875rem 1.5rem;
+  min-height: 44px;
+  opacity: 0.85;
+  transition: opacity 0.2s;
+}
+
+.landing-wrapper .mobile-menu a:hover,
+.landing-wrapper .mobile-menu a:focus-visible {
+  opacity: 1;
+}
+
+.landing-wrapper .mobile-menu a:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
+}
+
+.landing-wrapper .mobile-menu .mobile-nav-cta {
+  background: var(--ink);
+  color: var(--paper);
+  opacity: 1;
+  margin: 0.5rem 1.5rem 0;
+  padding: 0.875rem 1.25rem;
+  min-height: 44px;
+  justify-content: center;
+  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+}
+
+.landing-wrapper .mobile-menu .mobile-nav-cta:hover {
+  opacity: 0.88;
+}
+
+/* ─── MOBILE NAV BREAKPOINT ─────────────────────────────────────────── */
+@media (max-width: 767px) {
+  .landing-wrapper .nav-links {
+    display: none;
+  }
+
+  .landing-wrapper .burger-btn {
+    display: flex;
+  }
+
+  .landing-wrapper .site-nav {
+    padding: 1rem 1.25rem;
+  }
+}
+
+@media (min-width: 768px) {
+  /* Ensure mobile menu is never shown on tablet/desktop, even if JS state is open */
+  .landing-wrapper .mobile-menu,
+  .landing-wrapper .mobile-menu.open {
+    max-height: 0 !important;
+    pointer-events: none;
+  }
 }
 
 /* HERO CONTENT */
@@ -1468,5 +1586,121 @@
   }
   50% {
     transform: translateY(-8px);
+  }
+}
+
+/* ─── RESPONSIVE OVERRIDES ──────────────────────────────────────────── */
+
+/* Ensure all buttons are at least 44 px tall for tap targets */
+.landing-wrapper .btn {
+  min-height: 44px;
+}
+
+/* Hero content: tighter padding on mobile */
+@media (max-width: 767px) {
+  .landing-wrapper .hero-content {
+    padding: 2rem 1.25rem 2rem;
+  }
+
+  .landing-wrapper .hero-watermark {
+    width: 80%;
+    opacity: 0.12;
+  }
+}
+
+/* Hero action buttons stack full-width on narrow screens */
+@media (max-width: 479px) {
+  .landing-wrapper .hero-actions {
+    flex-direction: column;
+  }
+
+  .landing-wrapper .hero-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Problem section: 2-col already at ≤900px; collapse to 1-col at ≤599px */
+@media (max-width: 599px) {
+  .landing-wrapper .problem-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-wrapper .problem-card,
+  .landing-wrapper .problem-card:nth-child(3),
+  .landing-wrapper .problem-card:nth-child(4),
+  .landing-wrapper .problem-card:last-child {
+    border-right: none;
+    border-bottom: 1px solid var(--lb-border);
+  }
+
+  .landing-wrapper .problem-card:last-child {
+    border-bottom: none;
+  }
+
+  .landing-wrapper .problem-eye-col {
+    min-height: 200px;
+  }
+
+  .landing-wrapper .problem-top {
+    padding: 1.5rem;
+  }
+}
+
+/* Capabilities grid: collapse to 1-col on very narrow screens */
+@media (max-width: 479px) {
+  .landing-wrapper .capabilities-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Reset all border rules and apply uniform bottom borders */
+  .landing-wrapper .cap-card {
+    border-right: none;
+  }
+
+  .landing-wrapper .cap-card:nth-child(n) {
+    border-bottom: 1px solid var(--lb-border);
+  }
+
+  .landing-wrapper .cap-card:last-child {
+    border-bottom: none;
+  }
+}
+
+/* Waitlist form: stack input + button on mobile */
+@media (max-width: 639px) {
+  .landing-wrapper .waitlist-form {
+    flex-direction: column;
+  }
+
+  .landing-wrapper .waitlist-form input[type="email"] {
+    border-right: 1px solid var(--lb-border);
+    border-bottom: none;
+  }
+
+  .landing-wrapper .waitlist-form button {
+    clip-path: none;
+    min-height: 44px;
+  }
+}
+
+/* Section horizontal padding: reduce on mobile */
+@media (max-width: 767px) {
+  .landing-wrapper .problem-section,
+  .landing-wrapper .intro-section,
+  .landing-wrapper .offline-section,
+  .landing-wrapper .how-section,
+  .landing-wrapper .capabilities-section,
+  .landing-wrapper .terminal-section,
+  .landing-wrapper .early-access-section,
+  .landing-wrapper .faq-section,
+  .landing-wrapper .cta-section {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .landing-wrapper .problem-outer {
+    border-left: none;
+    border-right: none;
   }
 }

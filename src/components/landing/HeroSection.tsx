@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import {
   useCursorGradient,
   useNavScroll,
@@ -15,6 +15,33 @@ export function HeroSection({ tickerItems }: HeroSectionProps) {
   const scrolled = useNavScroll();
   const { background, onMouseMove } = useCursorGradient();
   const [tickerPaused, setTickerPaused] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const menuRef   = useRef<HTMLDivElement>(null);
+  const burgerRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    function handlePointer(e: MouseEvent) {
+      if (
+        menuRef.current   && !menuRef.current.contains(e.target as Node) &&
+        burgerRef.current && !burgerRef.current.contains(e.target as Node)
+      ) setMenuOpen(false);
+    }
+    document.addEventListener("mousedown", handlePointer);
+    return () => document.removeEventListener("mousedown", handlePointer);
+  }, [menuOpen]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") { setMenuOpen(false); burgerRef.current?.focus(); }
+    }
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, [menuOpen]);
+
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
 
   return (
     <motion.section className="hero" onMouseMove={onMouseMove}>
@@ -33,6 +60,24 @@ export function HeroSection({ tickerItems }: HeroSectionProps) {
       <Particles />
 
       <img src="/board.jpg" className="hero-watermark" alt="" />
+      {/* <svg
+        className="hero-watermark"
+        viewBox="0 0 68 54"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <rect
+          x="0"
+          y="0"
+          width="44"
+          height="33"
+          rx="3"
+          stroke="#0a0a0a"
+          strokeWidth="3"
+        />
+        <rect x="12" y="12" width="44" height="33" rx="3" fill="#0a0a0a" />
+      </svg> */}
 
       <motion.header
         className="site-header"
@@ -78,7 +123,41 @@ export function HeroSection({ tickerItems }: HeroSectionProps) {
               </a>
             </li>
           </ul>
+
+          {/* Burger — visible on mobile only (CSS hides it on ≥768px) */}
+          <button
+            ref={burgerRef}
+            className="burger-btn"
+            aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            onClick={() => setMenuOpen((o) => !o)}
+          >
+            {menuOpen ? "✕" : "☰"}
+          </button>
         </nav>
+
+        {/* Mobile slide-down menu */}
+        <div
+          ref={menuRef}
+          id="mobile-menu"
+          className={`mobile-menu${menuOpen ? " open" : ""}`}
+          role="navigation"
+          aria-label="Mobile navigation"
+          aria-hidden={!menuOpen}
+        >
+          <ul>
+            <li><a href="#our-approach" onClick={closeMenu}>How It Works</a></li>
+            <li><a href="#agents"       onClick={closeMenu}>Agents</a></li>
+            <li><a href="#memory"       onClick={closeMenu}>Memory</a></li>
+            <li><a href="#pricing"      onClick={closeMenu}>Pricing</a></li>
+            <li>
+              <a href="#early-access" className="mobile-nav-cta" onClick={closeMenu}>
+                Practice Your Board
+              </a>
+            </li>
+          </ul>
+        </div>
       </motion.header>
 
       <div className="hero-content" style={{ position: "relative", zIndex: 2 }}>
