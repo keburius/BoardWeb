@@ -20,20 +20,12 @@ export function LandingFooter() {
             <h3>Connect</h3>
             <ul>
               <li>
-                <a
-                  href="https://x.com/rig_code"
-                  target="_blank"
-                  rel="noopener"
-                >
+                <a href="#" target="_blank" rel="noopener">
                   Twitter
                 </a>
               </li>
               <li>
-                <a
-                  href="https://www.linkedin.com/company/get-rig/"
-                  target="_blank"
-                  rel="noopener"
-                >
+                <a href="#" target="_blank" rel="noopener">
                   LinkedIn
                 </a>
               </li>
